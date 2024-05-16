@@ -1,0 +1,53 @@
+/* style.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+}
+
+header nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+main {
+    padding: 20px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    background-color: #f9f9f9;
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.button-link, .button-remover {
+    margin: 5px;
+    padding: 5px 10px;
+    text-decoration: none;
+    color: white;
+    background-color: #007BFF;
+    border: none;
+    cursor: pointer;
+}
+
+.button-remover {
+    background-color: #dc3545;
+}
+
+.button-link:hover, .button-remover:hover {
+    opacity: 0.8;
+}

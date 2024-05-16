@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+	<!-- Define a codificação de caracteres e a viewport para dispositivos móveis -->
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- Define o título da página e vincula o arquivo de estilo CSS -->
+	<title>Lista de Vinhos</title>
+	<link rel="stylesheet" href="../css/catalago.css">
+</head>
+
+<body>
+	<!-- Cabeçalho da página -->
+	<header>
+		<h1>Catálogo de Vinhos</h1>
+	</header>
+	<main>
+		<!-- Seção principal da página onde a lista de vinhos será exibida -->
+		<section>
+			<ul id="listagemVinhos">
+				<!-- Vinhos serão listados aqui -->
+			</ul>
+		</section>
+	</main>
+	<script>
+		// Função para exibir todos os vinhos
+		function exibirVinhos() {
+			// Obtém a referência à lista de vinhos
+			let listagemVinhos = document.getElementById('listagemVinhos');
+
+			// Faz uma requisição GET para a rota /wines utilizando a API fetch
+			fetch('/wines')
+				.then(response => {
+					// Verifica se a resposta da requisição é bem-sucedida
+					if (!response.ok) {
+						throw new Error('Erro ao carregar os dados');
+					}
+					// Converte a resposta para JSON
+					return response.json();
+				})
+				.then(vinhos => {
+					// Itera sobre a lista de vinhos recebida
+					vinhos.forEach(v => {
+						// Cria um elemento <li> para cada vinho
+						let li = document.createElement('li');
+						// Define o texto do item da lista com informações do vinho
+						li.innerText = `${v.name} - ${v.description} - ${v.year} - ${v.price}`;
+
+						// Cria uma tag de imagem para exibir a imagem do vinho
+						let img = document.createElement('img');
+						// Define o atributo src com o URL da imagem
+						img.src = v.img;
+						// Define o atributo alt com o nome do vinho para acessibilidade
+						img.alt = v.name;
+						// Define o estilo da imagem para limitar a largura e garantir que seja responsiva
+						img.style.maxWidth = '100px';
+						img.style.display = 'block';
+						img.style.marginBottom = '10px';
+
+						// Adiciona a imagem como filho do item da lista
+						li.appendChild(img);
+
+						// Adiciona o item da lista à lista de vinhos
+						listagemVinhos.appendChild(li);
+					});
+				})
+				// Captura e loga erros ocorridos durante o processo
+				.catch(error => console.log('Error:', error));
+		}
+
+		// Exibe todos os vinhos ao carregar a página
+		exibirVinhos();
+	</script>
+</body>
+
+</html>
