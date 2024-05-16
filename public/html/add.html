@@ -1,16 +1,26 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+    <!-- Declaração do conjunto de caracteres do documento -->
     <meta charset="UTF-8">
+    <!-- Configuração da viewport para garantir que a página seja responsiva -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Título da página -->
     <title>Listagem e cadastro de vinhos</title>
+    <!-- Link para o arquivo CSS externo que contém os estilos da página -->
     <link rel="stylesheet" href="../css/style.css">
+    <!-- Estilos adicionais podem ser adicionados aqui -->
+    <style>
+       /* Adicione estilos CSS personalizados aqui */
+    </style>
 </head>
 <body>
+    <!-- Cabeçalho da página -->
     <header>
         <h1>Adicione um Vinho</h1>
     </header>
     <main>
+        <!-- Seção principal para o formulário de cadastro de vinhos -->
         <section>
             <form method="post" action="/wines/create">
                 <label for="name">Nome do vinho:</label>
@@ -29,6 +39,7 @@
                 <input class="cadastrar" type="submit" value="Cadastrar vinho">
             </form>
         </section>
+        <!-- Seção para listagem dos vinhos -->
         <section>
             <div id="message" class="message"></div>
             <ul id="listagemVinhos">
@@ -64,21 +75,32 @@
                 .then(vinhos => {
                     vinhos.forEach(v => {
                         let li = document.createElement('li');
-                        li.innerText = `${v.name} - ${v.description} - ${v.year} - ${v.price}`;
-                        
+                        li.className = 'wine-item';
+
                         let img = document.createElement('img');
                         img.src = v.img;
                         img.alt = v.name;
-                        img.style.maxWidth = '100px';
-                        img.style.display = 'block';
-                        img.style.marginBottom = '10px';
+                        img.className = 'wine-img';
                         li.appendChild(img);
+
+                        let wineDetails = document.createElement('div');
+                        wineDetails.className = 'wine-details';
+                        wineDetails.innerHTML = `
+                            <p><strong>Nome:</strong> ${v.name}</p>
+                            <p><strong>Descrição:</strong> ${v.description}</p>
+                            <p><strong>Ano:</strong> ${v.year}</p>
+                            <p><strong>Preço:</strong> ${v.price}</p>
+                        `;
+                        li.appendChild(wineDetails);
+
+                        let actions = document.createElement('div');
+                        actions.className = 'wine-actions';
 
                         let editar = document.createElement('a');
                         editar.innerText = "Editar";
                         editar.href = `/html/edit.html?id=${v.id}`;
                         editar.classList.add('button-link');
-                        li.appendChild(editar);
+                        actions.appendChild(editar);
 
                         let remover = document.createElement('button');
                         remover.innerText = "Remover";
@@ -86,8 +108,9 @@
                         remover.addEventListener('click', () => {
                             removerVinho(v.id);
                         });
-                        li.appendChild(remover);
+                        actions.appendChild(remover);
 
+                        li.appendChild(actions);
                         listagemVinhos.appendChild(li);
                     });
                 })

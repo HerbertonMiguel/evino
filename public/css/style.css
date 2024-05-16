@@ -122,3 +122,24 @@ form input.cadastrar:hover {
     background-color: #f2dede;
     color: #a94442;
 }
+
+
+.wine-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+.wine-details {
+    flex: 1;
+    margin-left: 10px;
+}
+.wine-details p {
+    margin: 2px 0;
+}
+.wine-img {
+    max-width: 100px;
+    display: block;
+}
+.button-link, .button-remover {
+    margin-right: 5px;
+}

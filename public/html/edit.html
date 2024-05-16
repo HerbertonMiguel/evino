@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Vinho</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Editar Vinho</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/html/edit.html">Editar Vinho</a>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <ul id="listagemVinhos">
+                <!-- Vinhos serão listados aqui -->
+            </ul>
+        </section>
+        <section>
+            <form id="editForm" style="display: none;">
+                <input type="hidden" id="wineId">
+                <label for="editName">Nome do vinho:</label>
+                <input type="text" id="editName">
+                <label for="editDescription">Descrição do vinho:</label>
+                <textarea id="editDescription"></textarea>
+                <label for="editYear">Ano:</label>
+                <input type="number" id="editYear">
+                <label for="editPrice">Preço:</label>
+                <input type="number" step="0.01" id="editPrice">
+                <label for="editImg">URL da Imagem:</label>
+                <input type="text" id="editImg">
+                <div>
+                    <img id="editImagePreview" src="" alt="Preview da Imagem" style="display:none; max-width: 100%; margin-top: 10px;">
+                </div>
+                <input class="salvar" type="submit" value="Salvar alterações">
+            </form>
+        </section>
+    </main>
+    <script>
+        // Função para exibir todos os vinhos na página de edição
+        function exibirVinhos() {
+            let listagemVinhos = document.getElementById('listagemVinhos');
+
+            // Faz uma requisição GET para a rota /wines
+            fetch('/wines')
+            .then(response => {
+                // Verifica se a resposta não é OK (status 200)
+                if (!response.ok) {
+                    throw new Error('Erro ao carregar os dados'); // Lança um erro se a resposta não for bem-sucedida
+                }
+                return response.json(); // Converte a resposta em JSON
+            })
+            .then(vinhos => {
+                // Itera sobre cada vinho retornado
+                vinhos.forEach(v => {
+                    // Cria o botão de editar para cada vinho
+                    let editar = document.createElement('button');
+                    editar.innerText = "Editar";
+                    editar.classList.add('button-link');
+                    editar.addEventListener('click', () => {
+                        editarVinho(v.id, v.name, v.description, v.year, v.price, v.img);
+                    });
+
+                    // Cria o item da lista com o nome, descrição e detalhes do vinho
+                    let li = document.createElement('li');
+                    li.innerText = `${v.name} - ${v.description} - ${v.year} - ${v.price}`;
+                    li.appendChild(editar);
+                    listagemVinhos.appendChild(li);
+                });
+            });
+        }
+
+        // Função para preencher o formulário de edição com os dados do vinho selecionado
+        function editarVinho(id, name, description, year, price, img) {
+            let form = document.getElementById('editForm');
+            document.getElementById('wineId').value = id;
+            document.getElementById('editName').value = name;
+            document.getElementById('editDescription').value = description;
+            document.getElementById('editYear').value = year;
+            document.getElementById('editPrice').value = price;
+            document.getElementById('editImg').value = img;
+
+            const imagePreview = document.getElementById('editImagePreview');
+            if (img) {
+                imagePreview.src = img;
+                imagePreview.style.display = 'block';
+            } else {
+                imagePreview.style.display = 'none';
+            }
+
+            form.style.display = 'block';
+        }
+
+        // Evento de submit do formulário de edição
+        document.getElementById('editForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Impede o comportamento padrão de submit
+            let id = document.getElementById('wineId').value;
+            let name = document.getElementById('editName').value;
+            let description = document.getElementById('editDescription').value;
+            let year = document.getElementById('editYear').value;
+            let price = document.getElementById('editPrice').value;
+            let img = document.getElementById('editImg').value;
+
+            // Faz a requisição PUT para atualizar o vinho
+            fetch(`/wines/${id}`, {
+                method: 'PUT', // Define o método HTTP como PUT
+                headers: {
+                    'Content-Type': 'application/json' // Define o cabeçalho como JSON
+                },
+                body: JSON.stringify({ name, description, year, price, img }) // Converte o corpo da requisição em JSON
+            })
+            .then(response => {
+                // Verifica se a resposta é OK (status 200)
+                if (response.ok) {
+                    alert('Vinho atualizado com sucesso'); // Exibe um alerta de sucesso
+                    window.location.href = '/html/edit.html'; // Redireciona para a página de edição
+                } else {
+                    alert('Erro ao atualizar o vinho'); // Exibe um alerta de erro
+                    console.error('Error:', response); // Exibe o erro no console
+                }
+            })
+            .catch(error => console.log('Error:', error)); // Captura e exibe qualquer erro que ocorrer na requisição
+        });
+
+        // Exibe todos os vinhos ao carregar a página
+        exibirVinhos();
+    </script>
+</body>
+</html>

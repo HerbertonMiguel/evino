@@ -2,76 +2,90 @@
 <html lang="pt-br">
 
 <head>
-	<!-- Define a codificação de caracteres e a viewport para dispositivos móveis -->
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<!-- Define o título da página e vincula o arquivo de estilo CSS -->
-	<title>Lista de Vinhos</title>
-	<link rel="stylesheet" href="../css/catalago.css">
+    <!-- Declaração do conjunto de caracteres do documento -->
+    <meta charset="UTF-8">
+    <!-- Configuração da viewport para garantir que a página seja responsiva -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Título da página -->
+    <title>Lista de Vinhos</title>
+    <!-- Link para o arquivo CSS externo que contém os estilos da página -->
+    <link rel="stylesheet" href="../css/catalogo.css">
 </head>
 
 <body>
-	<!-- Cabeçalho da página -->
-	<header>
-		<h1>Catálogo de Vinhos</h1>
-	</header>
-	<main>
-		<!-- Seção principal da página onde a lista de vinhos será exibida -->
-		<section>
-			<ul id="listagemVinhos">
-				<!-- Vinhos serão listados aqui -->
-			</ul>
-		</section>
-	</main>
-	<script>
-		// Função para exibir todos os vinhos
-		function exibirVinhos() {
-			// Obtém a referência à lista de vinhos
-			let listagemVinhos = document.getElementById('listagemVinhos');
+    <!-- Cabeçalho da página -->
+    <header>
+        <h1>Catálogo de Vinhos</h1>
+    </header>
+    <main>
+        <!-- Seção principal da página -->
+        <section>
+            <!-- Lista não ordenada que exibirá os vinhos -->
+            <ul id="listagemVinhos" class="wine-catalog">
+                <!-- Vinhos serão listados aqui -->
+            </ul>
+        </section>
+    </main>
+    <script>
+        // Função para exibir todos os vinhos
+        function exibirVinhos() {
+            // Obtém a referência à lista de vinhos pelo ID
+            let listagemVinhos = document.getElementById('listagemVinhos');
 
-			// Faz uma requisição GET para a rota /wines utilizando a API fetch
-			fetch('/wines')
-				.then(response => {
-					// Verifica se a resposta da requisição é bem-sucedida
-					if (!response.ok) {
-						throw new Error('Erro ao carregar os dados');
-					}
-					// Converte a resposta para JSON
-					return response.json();
-				})
-				.then(vinhos => {
-					// Itera sobre a lista de vinhos recebida
-					vinhos.forEach(v => {
-						// Cria um elemento <li> para cada vinho
-						let li = document.createElement('li');
-						// Define o texto do item da lista com informações do vinho
-						li.innerText = `${v.name} - ${v.description} - ${v.year} - ${v.price}`;
+            // Faz uma requisição GET para a rota /wines usando fetch
+            fetch('/wines')
+                .then(response => {
+                    // Verifica se a resposta da requisição é bem-sucedida
+                    if (!response.ok) {
+                        throw new Error('Erro ao carregar os dados');
+                    }
+                    // Converte a resposta para JSON
+                    return response.json();
+                })
+                .then(vinhos => {
+                    // Itera sobre a lista de vinhos recebida
+                    vinhos.forEach(v => {
+                        // Cria um elemento <li> para cada vinho
+                        let li = document.createElement('li');
+                        // Adiciona a classe 'wine-item' ao <li> para estilização
+                        li.className = 'wine-item';
 
-						// Cria uma tag de imagem para exibir a imagem do vinho
-						let img = document.createElement('img');
-						// Define o atributo src com o URL da imagem
-						img.src = v.img;
-						// Define o atributo alt com o nome do vinho para acessibilidade
-						img.alt = v.name;
-						// Define o estilo da imagem para limitar a largura e garantir que seja responsiva
-						img.style.maxWidth = '100px';
-						img.style.display = 'block';
-						img.style.marginBottom = '10px';
+                        // Cria um elemento <img> para exibir a imagem do vinho
+                        let img = document.createElement('img');
+                        // Define o atributo src com o URL da imagem
+                        img.src = v.img;
+                        // Define o atributo alt com o nome do vinho para acessibilidade
+                        img.alt = v.name;
+                        // Adiciona a classe 'wine-img' à imagem para estilização
+                        img.className = 'wine-img';
 
-						// Adiciona a imagem como filho do item da lista
-						li.appendChild(img);
+                        // Cria um elemento <div> para conter os detalhes do vinho
+                        let wineDetails = document.createElement('div');
+                        // Adiciona a classe 'wine-details' à <div> para estilização
+                        wineDetails.className = 'wine-details';
+                        // Define o conteúdo HTML da <div> com os detalhes do vinho
+                        wineDetails.innerHTML = `
+                            <p><strong>Nome:</strong> ${v.name}</p>
+                            <p><strong>Descrição:</strong> ${v.description}</p>
+                            <p><strong>Ano:</strong> ${v.year}</p>
+                            <p><strong>Preço:</strong> ${v.price}</p>
+                        `;
 
-						// Adiciona o item da lista à lista de vinhos
-						listagemVinhos.appendChild(li);
-					});
-				})
-				// Captura e loga erros ocorridos durante o processo
-				.catch(error => console.log('Error:', error));
-		}
+                        // Adiciona a imagem como filho do <li>
+                        li.appendChild(img);
+                        // Adiciona os detalhes do vinho como filho do <li>
+                        li.appendChild(wineDetails);
+                        // Adiciona o <li> completo à lista de vinhos
+                        listagemVinhos.appendChild(li);
+                    });
+                })
+                // Captura e loga erros ocorridos durante o processo
+                .catch(error => console.log('Error:', error));
+        }
 
-		// Exibe todos os vinhos ao carregar a página
-		exibirVinhos();
-	</script>
+        // Chama a função para exibir os vinhos ao carregar a página
+        exibirVinhos();
+    </script>
 </body>
 
 </html>
