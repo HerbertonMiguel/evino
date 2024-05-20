@@ -57,3 +57,20 @@ main {
 .wine-details p strong {
     color: #b12704;
 }
+
+
+/* Estilo básico para os itens da lista de vinhos */
+.wine-item {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+/* Efeito de destaque quando o mouse passa sobre o item */
+.wine-item:hover {
+    transform: scale(1.05); /* Aumenta o tamanho em 5% */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adiciona uma leve sombra */
+}
